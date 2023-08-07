@@ -1,0 +1,13 @@
+.THIS .text-button > button {
+    cursor: default;
+    display: block;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #080707;
+}
+
+.THIS .text-button > button:hover {
+    color: #080707;
+}

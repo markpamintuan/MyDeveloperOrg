@@ -1,0 +1,25 @@
+<apex:page renderAs="pdf">
+<html>
+<head>
+
+<title>Testing</title>
+<style type="text/css">
+div.header {position: running(header)}
+div.footer {position: running(footer)} 
+@page{
+         @top-center {content: element(header)}
+         @bottom-center {content: element(footer)}
+     }    
+</style>
+</head>
+
+<body>
+
+<div class="header"> HEADER </div> 
+<div class="footer"> FOOTER </div>
+<div>
+    Normal Text
+</div>
+</body>
+</html>
+</apex:page>

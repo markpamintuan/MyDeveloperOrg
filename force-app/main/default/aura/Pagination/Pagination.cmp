@@ -1,0 +1,60 @@
+<aura:component >
+    <aura:attribute name="currentPageNumber" type="Integer" required="true" />
+    <aura:attribute name="maxPageNumber" type="Integer" required="true" />
+    <aura:attribute name="isShowSpinner" type="Boolean" default="false"/>
+
+    <div class="slds-button-group" role="group">
+        <!-- First Page Button -->
+        <aura:if isTrue="{!v.currentPageNumber == 1}">
+            <button onclick="{!c.firstPage}" class="slds-button slds-button--neutral" disabled="true">
+                <lightning:icon iconName="utility:chevronleft" size="x-small"/><lightning:icon iconName="utility:chevronleft" size="x-small"/>
+            </button>
+            <aura:set attribute="else">
+                <button onclick="{!c.firstPage}" class="slds-button slds-button--neutral">
+                    <lightning:icon iconName="utility:chevronleft" size="x-small"/><lightning:icon iconName="utility:chevronleft" size="x-small"/>
+                </button>
+            </aura:set>
+        </aura:if>
+
+        <!-- Previous Page Button -->
+        <aura:if isTrue="{!v.maxPageNumber == 1 || v.currentPageNumber == 1}">
+            <button onclick="{!c.prevPage}" class="slds-button slds-button--neutral" disabled="true">
+                <lightning:icon iconName="utility:chevronleft" size="x-small"/>
+            </button>
+            <aura:set attribute="else">
+                <button onclick="{!c.prevPage}" class="slds-button slds-button--neutral">
+                    <lightning:icon iconName="utility:chevronleft" size="x-small"/>
+                </button>
+            </aura:set>        
+        </aura:if>
+
+        <button class="slds-button slds-button--neutral" disabled="true">
+            {!v.currentPageNumber} / {!v.maxPageNumber}
+        </button>
+
+        <!-- Next Page Button -->
+        <aura:if isTrue="{!v.maxPageNumber == 1 || v.currentPageNumber == v.maxPageNumber}">
+            <button onclick="{!c.nextPage}" class="slds-button slds-button--neutral" disabled="true">
+                <lightning:icon iconName="utility:chevronright" size="x-small"/>
+            </button>
+            <aura:set attribute="else">
+                <button onclick="{!c.nextPage}" class="slds-button slds-button--neutral">
+                    <lightning:icon iconName="utility:chevronright" size="x-small"/>
+                </button>
+            </aura:set>        
+        </aura:if>        
+
+        <!-- Last Page Button -->
+        <aura:if isTrue="{!v.currentPageNumber == v.maxPageNumber || v.maxPageNumber == 1}">
+            <button onclick="{!c.lastPage}" class="slds-button slds-button--neutral" disabled="true">
+                <lightning:icon iconName="utility:chevronright" size="x-small"/><lightning:icon iconName="utility:chevronright" size="x-small"/>
+            </button>
+            <aura:set attribute="else">
+                <button onclick="{!c.lastPage}" class="slds-button slds-button--neutral">
+                    <lightning:icon iconName="utility:chevronright" size="x-small"/><lightning:icon iconName="utility:chevronright" size="x-small"/>
+                </button>
+            </aura:set>
+        </aura:if>        
+
+    </div>	
+</aura:component>

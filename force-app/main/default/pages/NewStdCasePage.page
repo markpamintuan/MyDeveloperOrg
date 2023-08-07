@@ -1,0 +1,17 @@
+<apex:page standardController="Case" extensions="SearchAirlineStationCX">
+    <apex:form >   
+        <apex:inputText value="{!airlineStationCode}" style="width:100%"/><br/><br/>
+        <div align="center">
+        	<apex:commandButton value="Search for Airline/Station" action="{!searchFromCode}"/><br/><br/>
+        </div>
+        <apex:pageMessages id="msgId" />
+        <apex:outputPanel >   
+        	<apex:repeat value="{!$Objecttype.Airline_Station__c.fieldsets.Airline_Station_Field_Set}" var="fs">
+        		<apex:repeat value="{!lstAirlineStation}" var="as">
+        		<b><apex:outputLabel value="{!fs.Label}: "/></b><br/>
+        		<apex:outputField value="{!as[fs.FieldPath]}"/><br/><br/>
+        		</apex:repeat>
+        	</apex:repeat><br/>
+        </apex:outputPanel>            
+    </apex:form>
+</apex:page>

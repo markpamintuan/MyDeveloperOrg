@@ -1,0 +1,115 @@
+<aura:component controller="MassApprovalRejectionController" implements="flexiPage:availableForAllPageTypes,force:appHostable">
+    
+    <!-- Call Javescript Method on Load -->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    
+    <!-- Functional Attributes -->
+    <aura:attribute name="columns" type="list" description="Captures the value of column names of the data table"/>
+    <aura:attribute name="data" type="object" description="Captures the records displayed in the data table"/>
+    <aura:attribute name="sortedBy" type="string" default="relatedTo" description="Captures the column name used for sorting"/>
+    <aura:attribute name="sortedDirection" type="string" default="asc" description="Captures the direction of sorting(ascending or descending)"/>
+    <aura:attribute name="isShowModal" type="boolean" default="false"/>
+    <aura:attribute name="isApprove" type="boolean" default="false"/>
+    <aura:attribute name="approversComment" type="string"/>
+    <aura:attribute name="isReject" type="boolean" default="false"/>
+    <aura:attribute name="actionType" type="String"/>
+    <aura:attribute name="isProcessing" type="Boolean" default="false" />
+    <aura:attribute name="withItemsSubmitted" type="Boolean" default="true" />
+
+    <!-- Pagination Attributes -->
+    <aura:handler name="change" value="{!v.pageNumber}"	action="{!c.renderPage}" />
+    <aura:attribute name="currentList" type="object"/> 
+    <aura:attribute name="pageNumber" type="Integer" default="1" />
+    <aura:attribute name="maxPage" type="Integer" default="1" />     
+    
+    <div class="slds-box slds-theme_default slds-card__header slds-is-relative">
+
+        <lightning:spinner aura:id="spinnerId" variant="brand" size="medium" class="{!((v.isProcessing)? '': 'slds-hide')}"/>
+
+        <!-- Page Header -->
+        <div>
+            <span class="slds-page-header__title">Items to Approve</span>
+        </div>
+        <!-- Page Header -->
+        
+		<aura:if isTrue="{!v.withItemsSubmitted}"> 
+            <!--Approve and Reject buttons are disabled by default.Whenever a record is selected, buttons will be enabled-->
+            <div class="slds-m-vertical_medium">
+                <lightning:button aura:id="approvalButtonId" label="Approve" variant="success" disabled="true"
+                                onclick="{!c.showApproveModal}"/>
+                <lightning:button aura:id="rejectButtonId" label="Reject" variant="destructive" disabled="true"
+                                onclick="{!c.showRejectModal}"/>
+            </div>
+            <!--Approve and Reject buttons are disabled by default.Whenever a record is selected, buttons will be enabled-->
+            
+            <!-- Page Body -->
+            <div>
+                <!-- Table --> 
+                <lightning:datatable aura:id="approvalRecordsTableId"
+                                    keyField="workItemId"
+                                    columns="{!v.columns}"
+                                    data="{!v.currentList}"
+                                    sortedBy="{!v.sortedBy}"
+                                    sortedDirection="{!v.sortedDirection}"
+                                    onsort="{!c.handleSortingOfRows}"
+                                    onrowselection="{!c.handleRowSelection}"/>
+                <!-- Table -->
+                
+                <!-- Pagination Controls -->
+                                  
+                    <lightning:layout horizontalAlign="space">
+                        <lightning:layoutItem flexibility="auto" padding="around-small">
+                            <div>    
+                                <c:Pagination currentPageNumber="{!v.pageNumber}" maxPageNumber="{!v.maxPage}" isShowSpinner="{!v.isProcessing}"/>
+                            </div>  
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                
+                <!-- Pagination Controls -->   
+            </div>
+            <aura:set attribute="else">
+                <div style="text-align: center;">
+                    <p>No approval requests need your attention right now.</p>
+                </div>  
+            </aura:set>              
+		</aura:if> 
+        <!-- Page Body -->
+
+        <!--- Add Comment Modal -->
+        <aura:if isTrue="{!v.isShowModal}">
+            <div role="dialog" tabindex="-1" aria-labelledby="headerCloneEKH" class="slds-modal slds-fade-in-open ">
+                <div class="slds-modal__container">
+                    <div class="slds-modal__header">
+                        <button class="slds-button slds-modal__close slds-button--icon-inverse" title="Close" onclick="{!c.hideModal}">
+                            X
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                        <h2 id="headerApproveReject" class="slds-text-heading--medium"> {!v.actionType} Requests</h2>
+                        
+                    </div>
+                    
+                    <div class="slds-modal__content allowoverflow slds-p-around--medium">
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label" for="textarea-id-01">Comments</label>
+                            <div class="slds-form-element__control">
+                                <ui:inputTextArea aura:id="appComment"  class="slds-input"  value="{!v.approversComment}"/>
+                            </div>
+                          </div>
+                    </div>
+                    <div class="slds-modal__footer">
+                        <button class="slds-button slds-button--neutral" onclick="{!c.hideModal}">Cancel</button>
+                        <aura:if isTrue="{!v.isApprove}">
+                            <button class="slds-button slds-button--brand" label="Approve" onclick="{!c.handleApproveAction}">Approve</button>
+                        </aura:if>
+                        <aura:if isTrue="{!v.isReject}">
+                            <button class="slds-button slds-button--brand" label="Approve" onclick="{!c.handleRejectAction}">Reject</button>
+                        </aura:if>
+                    </div>                    
+                    
+                </div>
+            </div>
+            <div class="slds-backdrop slds-backdrop--open"></div>
+        </aura:if> 
+        <!-- Add Comment Modal -->		
+    </div>
+</aura:component>
